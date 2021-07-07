@@ -14,6 +14,7 @@ connectDB();
 // Define Routes
 app.use("/api/logs", require("./routes/logs"));
 app.use("/api/techs", require("./routes/techs"));
+// Test routes branch
 
 const PORT = process.env.PORT || 5000;
 
