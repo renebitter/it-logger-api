@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const TechSchema = mongoose.Schema({
-  tech: {
+  techs: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "techs",
   },
@@ -22,4 +22,4 @@ const TechSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("tech", TechSchema);
+module.exports = mongoose.model("techs", TechSchema);

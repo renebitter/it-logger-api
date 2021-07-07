@@ -9,12 +9,11 @@ app.get("/", (req, res) => res.json({ msg: "LOCAL NODE SERVER RUNNING" }));
 connectDB();
 
 // Init Middleware
-// app.use(express.json({ extended: false }));
+app.use(express.json({ extended: false }));
 
 // Define Routes
 app.use("/api/logs", require("./routes/logs"));
 app.use("/api/techs", require("./routes/techs"));
-// Test routes branch
 
 const PORT = process.env.PORT || 5000;
 
