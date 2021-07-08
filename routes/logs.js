@@ -7,7 +7,10 @@ const Log = require("../models/Log");
 // @desc GET all logs
 router.get("/", async (req, res) => {
   try {
-    const logs = await Log.find();
+    const logs = await Log.find().sort({
+      date: "descending",
+    });
+
     res.json(logs);
   } catch (err) {
     console.error(err.message);
@@ -25,15 +28,16 @@ router.post(
   ],
   async (req, res) => {
     try {
-      const { message, tech, attention } = req.body;
+      const { message, tech, attention, date } = req.body;
 
-      const log = new Log({
+      const newLog = new Log({
         message,
         tech,
         attention,
+        date,
       });
 
-      await log.save();
+      const log = await newLog.save();
 
       res.json(log);
     } catch (err) {
@@ -46,13 +50,14 @@ router.post(
 // @route PUT api/logs/:id
 // @desc Update log
 router.put("/:id", async (req, res) => {
-  const { message, tech, attention } = req.body;
+  const { message, tech, attention, date } = req.body;
 
   //Build log object
   const logFields = {};
   if (message) logFields.message = message;
   if (tech) logFields.tech = tech;
-  logFields.attention = attention;
+  if (attention) logFields.attention = attention;
+  if (date) logFields.date = date;
 
   try {
     let log = await Log.findById(req.params.id);
@@ -63,7 +68,7 @@ router.put("/:id", async (req, res) => {
       req.params.id,
       { $set: logFields },
       { new: true }
-    ); //if new is set to true it returns the updated document, and if is set to false (default) it returns the old one.
+    );
 
     res.json(log);
   } catch (err) {
@@ -80,9 +85,9 @@ router.delete("/:id", async (req, res) => {
 
     if (!log) return res.status(404).json({ msg: "Log not found." });
 
-    log = await Log.findByIdAndRemove(req.params.id); //if new is set to true it returns the updated document, and if is set to false (default) it returns the old one.
+    log = await Log.findByIdAndRemove(req.params.id);
 
-    res.send("Log Removed.");
+    res.json({ msg: "Log Removed." });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error.");
